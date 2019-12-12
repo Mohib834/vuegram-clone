@@ -13,7 +13,7 @@
 
             <v-list color="transparent">
               <v-list-item>
-                <router-link class="vuegram-link white--text" to="/">Logout</router-link>
+                <a class="vuegram-link white--text" @click.prevent="logout">Logout</a>
               </v-list-item>
             </v-list>
           </v-layout>
@@ -32,6 +32,11 @@ import vuegramBlogsContainer from "../components/vuegramBlogsContainer/vuegramBl
 export default {
   components: {
     vuegramBlogsContainer
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch("signout", { vm: this });
+    }
   }
 };
 </script>

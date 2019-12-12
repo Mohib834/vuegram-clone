@@ -19,18 +19,18 @@
             color="primary"
             width="130px"
             class="text-capitalize mb-3 mt-1"
-            @click.prevent="submitBlog"
+            @click.prevent="postBlog"
           >Post</v-btn>
         </v-card>
       </v-col>
       <v-col cols="12" sm="8">
         <v-simple-table>
           <tbody>
-            <tr class="table-row">
+            <tr class="table-row" v-for="(b, i) in blogs" :key="i">
               <td class="pa-4">
                 <h2 class="mb-1">Blog Heading</h2>
                 <p class="mb-1 caption font-italic grey--text">2 days ago</p>
-                <p>Blog content</p>
+                <p>{{b.blog}}</p>
                 <ul style="list-style:none" class="d-flex pl-0">
                   <li class="mr-3 overline primary--text text-lowercase">comments 0</li>
                   <li class="mr-3 overline primary--text text-lowercase">likes 0</li>
@@ -46,24 +46,26 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
-    mounted(){
-        this.$store.dispatch('fetchCurrentUserBlogs')
-    },
+  mounted() {
+    this.$store.dispatch("fetchAllBlogs");
+  },
+  data() {
+    return {
+      blogText: ""
+    };
+  },
   computed: {
-    blogText: {
-      get() {
-        return this.$store.state.blogText;
-      },
-      set(value) {
-        this.$store.state.blogText = value;
-      }
-    }
+    ...mapGetters(["blogs"])
   },
   methods: {
-    ...mapActions(["submitBlog"])
+    ...mapActions(["submitBlog"]),
+    postBlog() {
+      this.submitBlog({ blogText: this.blogText });
+      this.blogText = "";
+    }
   }
 };
 </script>
