@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import firebase from 'firebase';
+
 const auth = firebase.auth();
 const db = firebase.firestore();
 
@@ -9,7 +10,8 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
     state: {
         activeUserUid: '',
-        blogs: []
+        blogs: [],
+        authFormLoading: false,
     },
     getters: {
         activeUserUid(state) {
@@ -17,6 +19,9 @@ export const store = new Vuex.Store({
         },
         blogs(state) {
             return state.blogs;
+        },
+        authFormLoading(state) {
+            return state.authFormLoading;
         }
     },
     mutations: {
@@ -25,10 +30,16 @@ export const store = new Vuex.Store({
         },
         addBlog(state, payload) {
             state.blogs = payload;
+        },
+        changeAuthLoadingStatus(state, payload) {
+            state.authFormLoading = payload
         }
     },
     actions: {
         signup(context, payload) {
+            // Set the authFormLoading to true
+            context.commit('changeAuthLoadingStatus', true);
+
             const { userData, vm } = payload;
             // Creating a new User 
             auth.createUserWithEmailAndPassword(userData.email, userData.password
@@ -37,18 +48,34 @@ export const store = new Vuex.Store({
                 // Dispatching an action which will store the data in firestore
                 context.dispatch('storeNewUserData', { ...userData })
                 vm.$router.push({ name: 'dashboard' })
-            }).catch(err => console.log(err));
+                // Set the authFormLoading to false
+                context.commit('changeAuthLoadingStatus', false);
+            }).catch(err => {
+                console.log(err);
+                // Set the authFormLoading to false
+                context.commit('changeAuthLoadingStatus', false);
+            });
         },
         signin(context, payload) {
+            // Set the authFormLoading to true
+            context.commit('changeAuthLoadingStatus', true);
+
             const { userData, vm } = payload;
-            console.log(context);
+
             // Creating a new User 
             auth.signInWithEmailAndPassword(userData.email, userData.password
             ).then((response) => {
                 // const { uid } = response.user;
                 // Dispatching an action which will store the data in firestore
                 vm.$router.push({ name: 'dashboard' })
-            }).catch(err => console.log(err));
+
+                // Set the authFormLoading to false
+                context.commit('changeAuthLoadingStatus', false);
+            }).catch(err => {
+                console.log(err);
+                // Set the authFormLoading to false
+                context.commit('changeAuthLoadingStatus', false);
+            });
         },
         async signout(context, payload) {
             const { vm } = payload;

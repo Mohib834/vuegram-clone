@@ -1,29 +1,47 @@
 <template>
-  <v-form @submit.prevent="handleSignup(userData)">
+  <v-form ref="form">
     <h1 class="display-1 font-weight-bold mb-2">Get Started</h1>
     <p class="subheading-2 grey--text">Create your account and start using it for free</p>
     <v-row>
       <v-col class="pb-1">
-        <v-text-field v-model="userData.firstName" label="First name" required></v-text-field>
+        <v-text-field :rules="rules.name" v-model="userData.firstName" label="First name" required></v-text-field>
       </v-col>
       <v-col class="pb-1">
-        <v-text-field v-model="userData.lastName" label="Last name" required></v-text-field>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col class="pb-1">
-        <v-text-field v-model="userData.email" label="Email" required></v-text-field>
-      </v-col>
-      <v-col class="pb-1">
-        <v-text-field v-model="userData.phone" label="Phone" required></v-text-field>
+        <v-text-field :rules="rules.name" v-model="userData.lastName" label="Last name" required></v-text-field>
       </v-col>
     </v-row>
     <v-row>
       <v-col class="pb-1">
-        <v-text-field v-model="userData.password" label="Password" required></v-text-field>
+        <v-text-field
+          :rules="rules.email"
+          type="email"
+          v-model="userData.email"
+          label="Email"
+          required
+        ></v-text-field>
       </v-col>
       <v-col class="pb-1">
-        <v-text-field v-model="userData.confirmPassword" label="Confirm Password" required></v-text-field>
+        <v-text-field :rules="rules.phone" v-model="userData.phone" label="Phone" required></v-text-field>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col class="pb-1">
+        <v-text-field
+          :rules="rules.password"
+          type="password"
+          v-model="userData.password"
+          label="Password"
+          required
+        ></v-text-field>
+      </v-col>
+      <v-col class="pb-1">
+        <v-text-field
+          :rules="rules.confirmPassword"
+          type="password"
+          v-model="userData.confirmPassword"
+          label="Confirm Password"
+          required
+        ></v-text-field>
       </v-col>
     </v-row>
     <v-row>
@@ -34,6 +52,7 @@
           width="130px"
           class="text-capitalize"
           style="border-radius:0"
+          :loading="authFormLoading"
         >Sign up</v-btn>
       </v-col>
     </v-row>
@@ -50,6 +69,8 @@
 
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data() {
     return {
@@ -60,12 +81,35 @@ export default {
         phone: "",
         password: "",
         confirmPassword: ""
+      },
+      rules: {
+        email: [
+          v => v.length === 0 && "Email is required !",
+          v => /.+@.+/.test(v) || "Email must be valid !"
+        ],
+        password: [
+          v => v.length === 0 && "Password is required !",
+          v => v.length >= 6 || "Minimum password length is 6 !"
+        ],
+        confirmPassword: [
+          v => v.length === 0 && "Confirm password is required !",
+          v => v === this.userData.password || "Password doesn't match !"
+        ],
+        name: [v => v.length === 0 && "Field must not be empty !"],
+        phone: [v => v.length === 10 || "Must be 10 digits !"]
       }
     };
   },
+  computed: {
+    ...mapGetters(["authFormLoading"])
+  },
   methods: {
     handleSignup() {
-      this.$store.dispatch("signup", { userData: this.userData, vm: this });
+      if (this.$refs.form.validate()) {
+        const payload = this.userData;
+        delete payload.confirmPassword;
+        this.$store.dispatch("signup", { userData: payload, vm: this });
+      }
     }
   }
 };
