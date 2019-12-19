@@ -1,5 +1,6 @@
 import Authentication from '@/pages/authentication.vue';
-import Dashboard from '@/pages/dashboard.vue';
+import Posts from '@/pages/posts.vue';
+import MyPosts from '@/pages/myPosts.vue';
 import Register from '../components/Register/Register.vue';
 import SignIn from '../components/SignIn/SignIn.vue';
 
@@ -15,9 +16,15 @@ export const routes = [
         ]
     },
     {
-        path: '/dashboard',
-        component: Dashboard,
-        name: 'dashboard',
+        path: '/posts',
+        component: Posts,
+        name: 'posts',
         meta: { requireAuth: true }
     },
+    {
+        path: '/myposts',
+        component: MyPosts,
+        name: 'myposts',
+        meta: { requireAuth: true }
+    }
 ]

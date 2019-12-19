@@ -106,7 +106,7 @@ export default {
   methods: {
     handleSignup() {
       if (this.$refs.form.validate()) {
-        const payload = this.userData;
+        const payload = {...this.userData};
         delete payload.confirmPassword;
         this.$store.dispatch("signup", { userData: payload, vm: this });
       }

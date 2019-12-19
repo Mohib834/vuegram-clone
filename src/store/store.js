@@ -11,6 +11,7 @@ export const store = new Vuex.Store({
     state: {
         activeUserUid: '',
         blogs: [],
+        myBlogs: [],
         authFormLoading: false,
     },
     getters: {
@@ -20,6 +21,9 @@ export const store = new Vuex.Store({
         blogs(state) {
             return state.blogs;
         },
+        myBlogs(state) {
+            return state.myBlogs
+        },
         authFormLoading(state) {
             return state.authFormLoading;
         }
@@ -28,8 +32,11 @@ export const store = new Vuex.Store({
         activeUserUid(state, payload) {
             state.activeUserUid = payload;
         },
-        addBlog(state, payload) {
+        addBlogs(state, payload) {
             state.blogs = payload;
+        },
+        addMyBlogs(state, payload) {
+            state.myBlogs = payload;
         },
         changeAuthLoadingStatus(state, payload) {
             state.authFormLoading = payload
@@ -107,7 +114,28 @@ export const store = new Vuex.Store({
                     }
                 })
             })
-            context.commit('addBlog', blogs)
+            context.commit('addBlogs', blogs)
+        },
+        fetchMyBlogs(context, payload) {
+            const blogs = [];
+            const { activeUserUid } = context.getters
+            db.collection('blogs').where('uid', '==', activeUserUid).onSnapshot(snapshot => {
+                const changes = snapshot.docChanges();
+                changes.forEach(change => {
+                    if (change.type === 'added') { // Will add the one which have 'added' type and will remove the 'deleted' one
+                        blogs.push({
+                            id: change.doc.id,
+                            ...change.doc.data()
+                        });
+                    }
+                })
+            })
+            context.commit('addMyBlogs', blogs)
+        },
+        deleteMyBlog(context, payload) {
+            const id = payload;
+            db.collection('blogs').doc(id).delete();
+            context.dispatch('fetchMyBlogs');
         }
     }
 })
