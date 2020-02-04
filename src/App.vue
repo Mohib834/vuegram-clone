@@ -1,6 +1,6 @@
 <template>
   <v-app class="v-app">
-    <TheHeader />
+    <TheHeader v-if="$route.name != 'registration' && $route.name != 'signin'" />
     <router-view></router-view>
   </v-app>
 </template>

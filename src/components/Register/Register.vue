@@ -4,10 +4,22 @@
     <p class="subheading-2 grey--text">Create your account and start using it for free</p>
     <v-row>
       <v-col class="pb-1">
-        <v-text-field :rules="rules.name" v-model="userData.firstName" label="First name" required></v-text-field>
+        <v-text-field
+          validate-on-blur
+          :rules="rules.name"
+          v-model="userData.firstName"
+          label="First name"
+          required
+        ></v-text-field>
       </v-col>
       <v-col class="pb-1">
-        <v-text-field :rules="rules.name" v-model="userData.lastName" label="Last name" required></v-text-field>
+        <v-text-field
+          validate-on-blur
+          :rules="rules.name"
+          v-model="userData.lastName"
+          label="Last name"
+          required
+        ></v-text-field>
       </v-col>
     </v-row>
     <v-row>
@@ -18,10 +30,17 @@
           v-model="userData.email"
           label="Email"
           required
+          validate-on-blur
         ></v-text-field>
       </v-col>
       <v-col class="pb-1">
-        <v-text-field :rules="rules.phone" v-model="userData.phone" label="Phone" required></v-text-field>
+        <v-text-field
+          validate-on-blur
+          :rules="rules.phone"
+          v-model="userData.phone"
+          label="Phone"
+          required
+        ></v-text-field>
       </v-col>
     </v-row>
     <v-row>
@@ -32,6 +51,7 @@
           v-model="userData.password"
           label="Password"
           required
+          validate-on-blur
         ></v-text-field>
       </v-col>
       <v-col class="pb-1">
@@ -41,6 +61,7 @@
           v-model="userData.confirmPassword"
           label="Confirm Password"
           required
+          validate-on-blur
         ></v-text-field>
       </v-col>
     </v-row>
@@ -106,7 +127,7 @@ export default {
   methods: {
     handleSignup() {
       if (this.$refs.form.validate()) {
-        const payload = {...this.userData};
+        const payload = { ...this.userData };
         delete payload.confirmPassword;
         this.$store.dispatch("signup", { userData: payload, vm: this });
       }

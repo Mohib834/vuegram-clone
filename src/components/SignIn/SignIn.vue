@@ -11,6 +11,7 @@
             v-model="userData.email"
             label="Email"
             required
+            validate-on-blur
           ></v-text-field>
         </v-col>
       </v-row>
@@ -21,6 +22,7 @@
             type="password"
             v-model="userData.password"
             label="Password"
+            validate-on-blur
             required
           ></v-text-field>
         </v-col>

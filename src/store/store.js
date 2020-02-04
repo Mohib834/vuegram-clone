@@ -54,7 +54,7 @@ export const store = new Vuex.Store({
                 // const { uid } = response.user;
                 // Dispatching an action which will store the data in firestore
                 context.dispatch('storeNewUserData', { ...userData })
-                vm.$router.push({ name: 'dashboard' })
+                vm.$router.push({ name: 'posts' })
                 // Set the authFormLoading to false
                 context.commit('changeAuthLoadingStatus', false);
             }).catch(err => {
@@ -74,7 +74,7 @@ export const store = new Vuex.Store({
             ).then((response) => {
                 // const { uid } = response.user;
                 // Dispatching an action which will store the data in firestore
-                vm.$router.push({ name: 'dashboard' })
+                vm.$router.push({ name: 'posts' })
 
                 // Set the authFormLoading to false
                 context.commit('changeAuthLoadingStatus', false);

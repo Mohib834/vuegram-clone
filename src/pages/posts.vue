@@ -1,11 +1,6 @@
 <template>
   <main>
     <v-container>
-      <v-sheet
-        style="border-radius:0"
-        color="primary"
-        class="pa-3 font-weight-bold white--text mb-4"
-      >All Posts</v-sheet>
       <blogCard :blogs="blogs" />
     </v-container>
   </main>
