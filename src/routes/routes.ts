@@ -1,6 +1,6 @@
 import Authentication from '@/pages/authentication.vue';
-import Posts from '@/pages/posts.vue';
-import MyPosts from '@/pages/myPosts.vue';
+import Blogs from '@/pages/blogs.vue';
+import MyBlogs from '@/pages/myblogs.vue';
 import Register from '../components/Register/Register.vue';
 import SignIn from '../components/SignIn/SignIn.vue';
 
@@ -12,19 +12,19 @@ export const routes = [
         meta: { requireAuth: false },
         children: [
             { path: '', component: Register, name: 'registration' },
-            { path: '/sigin', component: SignIn, name: 'signin' }
+            { path: '/signin', component: SignIn, name: 'signin' }
         ]
     },
     {
-        path: '/posts',
-        component: Posts,
-        name: 'posts',
+        path: '/blogs',
+        component: Blogs,
+        name: 'blogs',
         meta: { requireAuth: true }
     },
     {
-        path: '/myposts',
-        component: MyPosts,
-        name: 'myposts',
+        path: '/myblogs',
+        component: MyBlogs,
+        name: 'myblogs',
         meta: { requireAuth: true }
     }
 ]

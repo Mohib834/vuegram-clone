@@ -7,7 +7,7 @@
             <router-link
               style="text-decoration:none"
               class="white--text"
-              :to="{name: 'posts'}"
+              :to="{name: 'blogs'}"
             >Vuegram</router-link>
           </v-toolbar-title>
 
@@ -20,8 +20,8 @@
             style="width:80%"
             hide-slider
           >
-            <v-tab style="font-size:15px" class="text-capitalize" :to="{name: 'posts'}">All Posts</v-tab>
-            <v-tab style="font-size:15px" class="text-capitalize" :to="{name: 'myposts'}">My Posts</v-tab>
+            <v-tab style="font-size:15px" class="text-capitalize" :to="{name: 'blogs'}">All Blogs</v-tab>
+            <v-tab style="font-size:15px" class="text-capitalize" :to="{name: 'myblogs'}">My Blogs</v-tab>
             <v-tab style="font-size:15px" class="text-capitalize" @click.prevent="logout">Logout</v-tab>
           </v-tabs>
         </v-layout>

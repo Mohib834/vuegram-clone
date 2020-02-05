@@ -60,10 +60,16 @@
           />
         </v-card-subtitle>
         <v-card-text>
-          <vue-editor v-model="newBlogData.content"></vue-editor>
+          <vue-editor v-model="newBlogData.blog"></vue-editor>
         </v-card-text>
         <v-card-actions class="px-4 pt-0 mt-n4">
-          <v-btn color="primary" class="text-capitalize px-4" style="border-radius:0">Add Post</v-btn>
+          <v-btn
+            :loading="loading"
+            @click="submitBlog"
+            color="primary"
+            class="text-capitalize px-4"
+            style="border-radius:0"
+          >Add Post</v-btn>
           <v-spacer />
           <v-switch color="primary" v-model="publishSwitch" label="Public"></v-switch>
         </v-card-actions>
@@ -73,31 +79,52 @@
 </template>
 
 
-<script>
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
+import store from "@/store/store";
 import { mapActions, mapGetters } from "vuex";
 import { VueEditor } from "vue2-editor";
 
-export default {
+@Component({
   components: {
     VueEditor
-  },
-  mounted() {
-    this.$store.dispatch("fetchMyBlogs");
-  },
-  data() {
-    return {
-      blogText: "",
-      show: false,
-      newBlogData: {
-        content: ""
-      },
-      publishSwitch: false
-    };
-  },
-  computed: {
-    ...mapGetters(["myBlogs"])
   }
-};
+})
+export default class MyBlogs extends Vue {
+  blog: string;
+  show: boolean;
+  newBlogData: {
+    blog: string;
+  };
+  publishSwitch: boolean;
+
+  constructor() {
+    super();
+    this.blog = "";
+    this.show = false;
+    this.newBlogData = {
+      blog: ""
+    };
+    this.publishSwitch = false;
+  }
+
+  mounted() {
+    store.dispatch.fetchMyBlogs();
+  }
+
+  get loading() {
+    return store.getters.loading;
+  }
+
+  get myBlogs() {
+    return store.getters.myBlogs;
+  }
+
+  submitBlog() {
+    store.dispatch.submitBlog(this.newBlogData);
+    if (!this.loading) this.show = false;
+  }
+}
 </script>
 
 <style lang="scss">
