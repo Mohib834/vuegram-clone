@@ -1,25 +1,34 @@
 export type Blog = {
-    uid: string;
-    blogContent: {
-        blogText: string;
-        createdAt: string;
-        createdBy: string;
-    };
-}
+  uid: string;
+  blogId?: string;
+  blogContent: {
+    blogTitle: string;
+    blogText: string;
+    createdAt: string;
+    createdBy: string;
+    comments?: Array<{
+      text: string;
+      by: string;
+      createdAt: string;
+    }>;
+  };
+};
 
 export type UserData = {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    password: string;
-    confirmPassword: string;
-}
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirmPassword: string;
+};
 
 export type State = {
-    activeUserUid: string;
-    blogs: Array<Blog>;
-    myBlogs: Array<Blog>
-    authFormLoading: boolean;
-    loading: boolean;
-}
+  activeUserUid: string;
+  blogs: Array<Blog>;
+  myBlogs: Array<Blog>;
+  blog: Blog;
+  authFormLoading: boolean;
+  loading: boolean;
+  showNav: boolean;
+};

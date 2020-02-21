@@ -1,5 +1,5 @@
 <template>
-  <header class="mb-8">
+  <header class="mb-8" v-if="showNav">
     <v-app-bar color="primary" dark>
       <v-container>
         <v-layout>
@@ -30,12 +30,18 @@
   </header>
 </template>
 
-<script>
-export default {
-  methods: {
-    logout() {
-      this.$store.dispatch("signout", { vm: this });
-    }
+<script lang="ts">
+import { Vue, Component } from "vue-property-decorator";
+import store from "@/store/store";
+
+@Component
+export default class TheHeader extends Vue {
+  get showNav() {
+    return store.getters.showNav;
   }
-};
+
+  logout() {
+    store.dispatch.signout({ vm: this });
+  }
+}
 </script>
