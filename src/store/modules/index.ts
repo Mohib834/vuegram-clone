@@ -157,14 +157,8 @@ const store = defineModule({
 
       let storageRef = storage.ref(activeUserUid); // Creating a reference to storage naming with a user id
       let fileRef = await storageRef
-        .child("/blog-image/" + payload.image)
+        .child("/blog-images/" + payload.image)
         .put(payload.image); // creating a file reference and uploading it on that reference.
-
-      // fileRef.ref.getDownloadURL().then(downloadUrl => {
-      //   console.log("url", downloadUrl);
-      //   // Getting the download url after file uploadation
-      //   blog.blogContent["blogImage"] = downloadUrl;
-      // });
 
       let downloadUrl = await fileRef.ref.getDownloadURL();
 

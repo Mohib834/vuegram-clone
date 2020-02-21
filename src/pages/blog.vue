@@ -1,5 +1,5 @@
-<template v-if="loading">
-  <main style="background:#fff">
+<template>
+  <main v-if="renderTemplate" style="background:#fff">
     <section>
       <v-container fluid class="pa-0" style="position:relative;height: 80vh">
         <div
@@ -41,13 +41,7 @@
           <v-col>
             <v-card color="#f7f7f7" elevation="0" class="pa-10">
               <v-sheet width="680px" color="transparent" class="mx-auto">
-                <strong class="mb-10 d-block">
-                  {{
-                  blog.blogContent.comments.length == 1
-                  ? "1 Comment"
-                  : blog.blogContent.comments.length + " Comments"
-                  }}
-                </strong>
+                <strong class="mb-10 d-block">{{ commentsNum }}</strong>
                 <v-list color="transparent">
                   <v-list-item
                     class="px-0 mb-12 d-flex align-center"
@@ -93,7 +87,7 @@
                     v-model="comment"
                   ></v-textarea>
                   <v-btn
-                    :loading="isLoading"
+                    :loading="loading"
                     @click="submitComment"
                     color="primary"
                     dark
@@ -117,7 +111,7 @@ import { Blog as BlogType } from "@/store/modules/types";
 @Component
 export default class Blog extends Vue {
   comment = "";
-  isLoading = false;
+  renderTemplate = false;
 
   @Ref("form") form!: HTMLFormElement;
 
@@ -129,9 +123,18 @@ export default class Blog extends Vue {
     return store.getters.blog;
   }
 
+  get commentsNum() {
+    if (this.blog.blogContent.comments) {
+      return this.blog.blogContent.comments.length == 1
+        ? "1 Comment"
+        : this.blog.blogContent.comments.length + " Comments";
+    } else {
+      return "0 Comments";
+    }
+  }
+
   submitComment() {
     // console.log(this.$route.params);
-    this.isLoading = true;
     store.dispatch
       .addComment({
         comment: this.comment,
@@ -139,19 +142,16 @@ export default class Blog extends Vue {
       })
       .then(() => {
         this.form.reset();
-        this.isLoading = false;
       })
       .catch(() => {
         this.form.reset();
-        this.isLoading = false;
       });
   }
 
-  created() {
-    store.dispatch.fetchABlog({ id: this.$route.params.id });
-  }
-
   mounted() {
+    store.dispatch.fetchABlog({ id: this.$route.params.id }).then(() => {
+      this.renderTemplate = true;
+    });
     store.commit.CHANGE_SHOW_NAV_STATUS(false);
   }
 

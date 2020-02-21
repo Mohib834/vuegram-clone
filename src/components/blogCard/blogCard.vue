@@ -1,5 +1,5 @@
 <template>
-  <v-layout row>
+  <v-layout row v-if="renderTemplate">
     <v-col cols="4" v-for="(blog, i) in blogs" :key="i">
       <v-card
         class="blog-card mx-auto"
@@ -40,15 +40,17 @@ import { Blog } from "../../store/modules/types";
 
 @Component
 export default class BlogCard extends Vue {
+  renderTemplate = false;
+
   @Prop()
   blogs!: Array<Blog>;
 
-  trim(value: string) {
-    return value.slice(0, 230) + "...";
+  mounted() {
+    if (this.blogs) this.renderTemplate = true;
   }
 
-  mounted() {
-    console.log(this.blogs[0].blogContent);
+  trim(value: string) {
+    return value.slice(0, 230) + "...";
   }
 }
 </script>
