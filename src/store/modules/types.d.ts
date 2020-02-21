@@ -2,6 +2,7 @@ export type Blog = {
   uid: string;
   blogId?: string;
   blogContent: {
+    blogImage: string;
     blogTitle: string;
     blogText: string;
     createdAt: string;

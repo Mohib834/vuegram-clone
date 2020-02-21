@@ -1,21 +1,32 @@
 <template>
   <v-layout row>
     <v-col cols="4" v-for="(blog, i) in blogs" :key="i">
-      <v-card class="blog-card mx-auto" elevation="5" height="395px" max-width="350" style="border-radius:0">
+      <v-card
+        class="blog-card mx-auto"
+        elevation="5"
+        height="395px"
+        max-width="350"
+        style="border-radius:0"
+      >
         <v-img
           class="white--text align-end blog-img"
           height="200px"
-          src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+          :src="blog.blogContent.blogImage"
         >
           <div class="img-overlay" />
           <v-card-title>{{blog.blogContent.blogTitle}}</v-card-title>
         </v-img>
 
-        <v-card-text class="text--primary" >
+        <v-card-text class="text--primary">
           <div class="blog-text" v-html="trim(blog.blogContent.blogText)"></div>
         </v-card-text>
         <v-card-actions class="pb-4 mt-n1">
-          <v-btn :to="`/blog/${blog.blogId}`" class="text-capitalize" style="position:relative; left: 5px; border-radius: 0" color="primary">View</v-btn>
+          <v-btn
+            :to="`/blog/${blog.blogId}`"
+            class="text-capitalize"
+            style="position:relative; left: 5px; border-radius: 0"
+            color="primary"
+          >View</v-btn>
           <v-spacer />
         </v-card-actions>
       </v-card>
@@ -30,10 +41,14 @@ import { Blog } from "../../store/modules/types";
 @Component
 export default class BlogCard extends Vue {
   @Prop()
-  blogs!: Blog;
+  blogs!: Array<Blog>;
 
   trim(value: string) {
     return value.slice(0, 230) + "...";
+  }
+
+  mounted() {
+    console.log(this.blogs[0].blogContent);
   }
 }
 </script>

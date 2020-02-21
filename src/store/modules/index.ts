@@ -133,14 +133,19 @@ const store = defineModule({
       const { commit } = modActionContext(context);
       commit.SET_ACTIVE_USER_UID(payload);
     },
-    submitBlog(context, payload: { blogText: string; blogTitle: string }) {
+    async submitBlog(
+      context,
+      payload: { blogText: string; blogTitle: string; image: File }
+    ) {
       const { commit, dispatch, getters } = modActionContext(context);
       commit.CHANGE_LOADING_STATUS(true);
 
       const { activeUserUid } = getters;
+
       let blog: Blog = {
         uid: activeUserUid,
         blogContent: {
+          blogImage: "",
           blogTitle: payload.blogTitle,
           blogText: payload.blogText,
           createdAt: moment()
@@ -149,6 +154,22 @@ const store = defineModule({
           createdBy: "User"
         }
       };
+
+      let storageRef = storage.ref(activeUserUid); // Creating a reference to storage naming with a user id
+      let fileRef = await storageRef
+        .child("/blog-image/" + payload.image)
+        .put(payload.image); // creating a file reference and uploading it on that reference.
+
+      // fileRef.ref.getDownloadURL().then(downloadUrl => {
+      //   console.log("url", downloadUrl);
+      //   // Getting the download url after file uploadation
+      //   blog.blogContent["blogImage"] = downloadUrl;
+      // });
+
+      let downloadUrl = await fileRef.ref.getDownloadURL();
+
+      blog.blogContent["blogImage"] = downloadUrl;
+
       return new Promise((resolve, reject) => {
         db.collection("blogs")
           .add(blog)
@@ -274,10 +295,6 @@ const store = defineModule({
             reject();
           });
       });
-    },
-    uploadBlogImage(image: any) {
-      let file = image;
-      storage.ref("/images/blogimages/" + file).put(file);
     }
   }
 });
