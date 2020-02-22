@@ -5,12 +5,14 @@
     class="mx-auto"
     style="box-shadow: 0 10px 10px rgba(0,0,0,.1)"
   >
-    <v-overlay v-if="loading">
+    <v-overlay v-if="isUploading">
       <v-card
         color="#fff"
         elevation="6"
-        style="height: 100px;display: flex;align-items: center;padding: 10px 30px;z-index: 100;"
+        class="d-flex flex-column"
+        style="height: 100px;display: flex;align-items: center;padding: 4px 30px;z-index: 100;"
       >
+        <v-card-title class="primary--text font-weight-bold">Please Wait</v-card-title>
         <v-sheet width="600px">
           <v-progress-linear background-color="#bbb" :value="uploadProgress"></v-progress-linear>
         </v-sheet>
@@ -77,22 +79,28 @@
 <script lang="ts">
 import { Vue, Component, Ref } from "vue-property-decorator";
 import store from "@/store/store";
+import { Route } from "vue-router";
 
-@Component
+@Component({
+  beforeRouteEnter(to: Route, from: Route, next: Function) {
+    next((vm: Vue) => {
+      vm.$store.getters.user.setupCompleted === false
+        ? next()
+        : next("/myblogs");
+    });
+  }
+})
 export default class Setup extends Vue {
   step = 1;
+  isUploading = false;
 
   userAdditionalDetails = {
-    occupation: "Dev",
-    bio: "This is a test bio case",
+    occupation: "",
+    bio: "",
     photo: null
   };
 
   @Ref("form") form!: HTMLFormElement;
-
-  get loading() {
-    return store.getters.loading;
-  }
 
   get uploadProgress() {
     return store.getters.uploadProgress;
@@ -104,11 +112,13 @@ export default class Setup extends Vue {
     }
   }
 
-  setupUser() {
-    store.dispatch.setupUser({
+  async setupUser() {
+    this.isUploading = true;
+    await store.dispatch.setupUser({
       data: this.userAdditionalDetails,
       vm: this
     });
+    this.isUploading = false;
   }
 }
 </script>

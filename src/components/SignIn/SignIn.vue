@@ -1,6 +1,6 @@
 <template>
   <div class="align-self-center" style="width:100%">
-    <v-form ref="form" style="flex: 1">
+    <v-form ref="form" lazy-validation @submit.prevent="handleSignIn" style="flex: 1">
       <h1 class="display-1 font-weight-bold mb-2">Login To Dashboard</h1>
       <!-- <p class="subheading-2 grey--text">Create your account and start using it for free</p> -->
       <v-row>
@@ -36,6 +36,7 @@
             class="text-capitalize"
             style="border-radius:0"
             :loading="authFormLoading"
+            type="submit"
           >Login</v-btn>
         </v-col>
       </v-row>
@@ -51,38 +52,49 @@
   </div>
 </template>
 
-<script>
-import { mapGetters } from "vuex";
+<script lang="ts">
+import { Vue, Component, Ref } from "vue-property-decorator";
 import store from "@/store/store";
+import { Route } from "vue-router";
+import firebase from "firebase";
 
-export default {
-  data() {
-    return {
-      userData: {
-        email: "",
-        password: ""
-      },
-      rules: {
-        email: [
-          v => v.length === 0 && "Email is required !",
-          v => /.+@.+/.test(v) || "Email must be valid"
-        ],
-        password: [
-          v => v.length === 0 && "Password is required !",
-          v => v.length >= 6 || "Minimum password length is 6 !"
-        ]
-      }
-    };
-  },
-  computed: {
-    ...mapGetters(["authFormLoading"])
-  },
-  methods: {
-    handleSignIn() {
-      if (this.$refs.form.validate()) {
-        store.dispatch.signin({ vm: this, userData: this.userData });
-      }
+@Component({
+  beforeRouteEnter(to: Route, from: Route, next: Function) {
+    next((vm: Vue) => {
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          next("/myblogs");
+        } else next();
+      });
+    });
+  }
+})
+export default class Signin extends Vue {
+  @Ref("form") form!: HTMLFormElement;
+
+  userData = {
+    email: "",
+    password: ""
+  };
+  rules = {
+    email: [
+      (v: string) => v.length === 0 && "Email is required !",
+      (v: string) => /.+@.+/.test(v) || "Email must be valid"
+    ],
+    password: [
+      (v: string) => v.length === 0 && "Password is required !",
+      (v: string) => v.length >= 6 || "Minimum password length is 6 !"
+    ]
+  };
+
+  get authFormLoading() {
+    return store.getters.authFormLoading;
+  }
+
+  handleSignIn() {
+    if (this.form.validate()) {
+      store.dispatch.signin({ vm: this, userData: this.userData });
     }
   }
-};
+}
 </script>

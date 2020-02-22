@@ -1,8 +1,8 @@
 import Vue from "vue";
 import vueRouter, { Route } from "vue-router";
 import { routes } from "./routes/routes";
-import { openDB } from "idb";
 import store from "./store/store";
+import firebase from "firebase";
 
 Vue.use(vueRouter);
 
@@ -15,6 +15,8 @@ router.beforeEach(async (to: Route, from: Route, next: Function) => {
   const requireAuth = to.meta.requireAuth;
 
   if (requireAuth) {
-    store.getters.activeUserUid ? next() : null;
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) next();
+    });
   } else next();
 });

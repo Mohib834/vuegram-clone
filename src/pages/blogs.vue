@@ -3,12 +3,12 @@
     <v-container>
       <blogCard :blogs="blogs" />
       <v-row v-if="loading">
-        <v-col v-for="n in 3" :key="n">
+        <v-col class="px-0" v-for="n in 3" :key="n">
           <v-skeleton-loader class="mx-auto" max-width="350" type="card"></v-skeleton-loader>
         </v-col>
       </v-row>
       <v-row v-if="loading">
-        <v-col v-for="n in 3" :key="n">
+        <v-col class="px-0" v-for="n in 3" :key="n">
           <v-skeleton-loader class="mx-auto" max-width="350" type="card"></v-skeleton-loader>
         </v-col>
       </v-row>

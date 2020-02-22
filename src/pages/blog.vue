@@ -10,10 +10,13 @@
           >{{ blog.blogContent.createdAt }}</span>
           <h1 class="display-4 white--text text-center">{{ blog.blogContent.blogTitle }}</h1>
           <span class="d-block white--text text-center mt-6">
-            <v-avatar class>
+            <v-avatar class="mr-2" v-if="user.photo" size="40px">
+              <img :src="user.photo" style="object-position:top; object-fit:cover;" />
+            </v-avatar>
+            <v-avatar class="mr-2" v-else>
               <v-icon dark size="40px">mdi-account-circle</v-icon>
-            </v-avatar>Mohib Arshi
-            <!-- {{blog.blogContent.createdBy}} -->
+            </v-avatar>
+            {{blog.blogContent.createdBy}}
           </span>
         </div>
         <v-img
@@ -62,8 +65,16 @@
                       class="caption"
                       style="position:absolute; right: 0; top:-10px;"
                     >{{ comment.createdAt }}</span>
-                    <v-avatar class="mr-2" style="position:relative; left: -6px;top:-16px">
-                      <v-icon color="primary" dark size="60px">mdi-account-circle</v-icon>
+                    <v-avatar
+                      class="mr-2"
+                      v-if="user.photo"
+                      size="70px"
+                      style="position:relative; left: -6px;top:-30px"
+                    >
+                      <img :src="user.photo" style="object-position:top; object-fit:cover;" />
+                    </v-avatar>
+                    <v-avatar class="mr-2" v-else style="position:relative; left: -6px;top:-16px">
+                      <v-icon color="primary" dark size="70px">mdi-account-circle</v-icon>
                     </v-avatar>
                     <v-sheet
                       class="d-flex flex-column"
@@ -131,6 +142,10 @@ export default class Blog extends Vue {
 
   get blog() {
     return store.getters.blog;
+  }
+
+  get user() {
+    return store.getters.user;
   }
 
   get commentsNum() {

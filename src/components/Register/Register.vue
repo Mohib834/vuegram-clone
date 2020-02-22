@@ -73,6 +73,7 @@
           width="130px"
           class="text-capitalize"
           style="border-radius:0"
+          type="submit"
           :loading="authFormLoading"
         >Sign up</v-btn>
       </v-col>
@@ -92,8 +93,20 @@
 <script lang="ts">
 import { Vue, Component, Ref } from "vue-property-decorator";
 import store from "@/store/store";
+import firebase from "firebase";
+import { Route } from "vue-router";
 
-@Component
+@Component({
+  beforeRouteEnter(to: Route, from: Route, next: Function) {
+    next((vm: Vue) => {
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          next("/myblogs");
+        } else next();
+      });
+    });
+  }
+})
 export default class Register extends Vue {
   @Ref("form") form!: HTMLFormElement;
 

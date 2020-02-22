@@ -8,7 +8,7 @@ import Setup from "@/pages/setup.vue";
 
 export const routes = [
   {
-    path: "/registration",
+    path: "/signup",
     component: Authentication,
     meta: { requireAuth: false },
     children: [

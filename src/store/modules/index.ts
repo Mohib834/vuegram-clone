@@ -112,6 +112,7 @@ const store = defineModule({
           // const { uid } = response.user;
           // Dispatching an action which will store the data in firestore
           delete userData.password;
+          userData["setupCompleted"] = false;
 
           if (response.user)
             dispatch.storeNewUserData({
@@ -245,7 +246,8 @@ const store = defineModule({
                 let moreData = {
                   photo: url,
                   bio: payload.data.bio,
-                  occupation: payload.data.occupation
+                  occupation: payload.data.occupation,
+                  setupCompleted: true
                 };
 
                 db.collection("users")
@@ -261,6 +263,11 @@ const store = defineModule({
                       ...moreData
                     });
 
+                    console.log("data", {
+                      ...oldData,
+                      ...moreData
+                    });
+
                     payload.vm.$router.push({ name: "myblogs" });
                   });
               });
@@ -270,7 +277,8 @@ const store = defineModule({
           let moreData = {
             photo: null,
             bio: payload.data.bio,
-            occupation: payload.data.occupation
+            occupation: payload.data.occupation,
+            setupCompleted: true
           };
           // store additional data
           db.collection("users")
@@ -296,7 +304,7 @@ const store = defineModule({
     },
     async submitBlog(
       context,
-      payload: { blogText: string; blogTitle: string; image: File }
+      payload: { blogText: string; blogTitle: string; image: File; by: string }
     ) {
       const { commit, dispatch, getters } = modActionContext(context);
       commit.CHANGE_LOADING_STATUS(true);
@@ -312,7 +320,7 @@ const store = defineModule({
           createdAt: moment()
             .subtract(1, "days")
             .format("DD-MM-YYYY | h:mm:ss a"),
-          createdBy: "User"
+          createdBy: payload.by
         }
       };
 

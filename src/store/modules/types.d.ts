@@ -24,6 +24,7 @@ export type UserData = {
   photo?: File | null;
   occupation?: string;
   bio?: string;
+  setupCompleted?: boolean;
 };
 
 export type State = {
