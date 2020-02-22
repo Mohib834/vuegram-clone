@@ -35,6 +35,10 @@ export type State = {
   loading: boolean;
   uploadProgress: number;
   showNav: boolean;
-  setupCompleted: boolean;
+  snackbar: {
+    toggle: boolean;
+    message: string;
+    color: string;
+  };
   user: Omit<UserData, "password">;
 };

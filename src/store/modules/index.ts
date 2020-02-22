@@ -23,7 +23,12 @@ const store = defineModule({
     loading: false,
     showNav: true,
     uploadProgress: 0,
-    user: {} as Omit<UserData, "password">
+    user: {} as Omit<UserData, "password">,
+    snackbar: {} as {
+      toggle: boolean;
+      message: string;
+      color: string;
+    }
   }),
   getters: {
     activeUserUid(state: State) {
@@ -52,6 +57,9 @@ const store = defineModule({
     },
     user(state: State) {
       return state.user;
+    },
+    snackbar(state: State) {
+      return state.snackbar;
     }
   },
   mutations: {
@@ -81,6 +89,12 @@ const store = defineModule({
     },
     SET_USER_DATA(state: State, payload: Omit<UserData, "password">) {
       state.user = payload;
+    },
+    TOGGLE_SNACKBAR(
+      state: State,
+      payload: { message: string; toggle: boolean; color: string }
+    ) {
+      state.snackbar = payload;
     }
   },
   actions: {
@@ -113,6 +127,11 @@ const store = defineModule({
           console.log(err);
           // Set the authFormLoading to false
           commit.CHANGE_AUTH_LOADING_STATUS(false);
+          commit.TOGGLE_SNACKBAR({
+            toggle: true,
+            message: err.message,
+            color: "#CA0B00"
+          });
         });
     },
     signin(
@@ -138,6 +157,11 @@ const store = defineModule({
           console.log(err);
           // Set the authFormLoading to false
           commit.CHANGE_AUTH_LOADING_STATUS(false);
+          commit.TOGGLE_SNACKBAR({
+            toggle: true,
+            message: err.message,
+            color: "#CA0B00"
+          });
         });
     },
     async signout(context, payload: { vm: Vue }) {

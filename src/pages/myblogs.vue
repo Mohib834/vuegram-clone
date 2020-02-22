@@ -8,7 +8,7 @@
               <v-card-title class="px-0">{{user.firstName + ' ' + user.lastName}}</v-card-title>
               <v-card-subtitle class="px-0 mb-4">{{ user.occupation }}</v-card-subtitle>
               <v-sheet class="d-flex justify-center mt-5 mb-5 mt-4">
-                <v-avatar v-if="!user.photo" color="grey" width="200px" height="200px">
+                <v-avatar v-if="!user.photo" color="grey" width="150px" height="150px">
                   <v-icon dark size="80px">mdi-account-circle</v-icon>
                 </v-avatar>
                 <v-avatar v-else width="200px" height="200px">
