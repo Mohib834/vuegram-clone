@@ -1,144 +1,170 @@
 <template>
   <main id="myblogs">
-    <v-container>
-      <v-layout row>
-        <v-col cols="12" sm="4">
-          <v-card class="pa-6" flat style="border-radius:0">
-            <v-card-title class="px-0">Your Name</v-card-title>
-            <v-card-subtitle class="px-0 mb-4">Your Designation</v-card-subtitle>
-            <v-sheet class="d-flex justify-center my-10 mt-4">
-              <v-avatar color="grey" width="150px" height="150px">
-                <v-icon dark size="80px">mdi-account-circle</v-icon>
-              </v-avatar>
-            </v-sheet>
-            <v-btn
-              style="border-radius:0"
-              block
-              color="primary"
-              width="130px"
-              class="text-none mb-3 mt-1"
-              @click="show = true"
-            >Create a Post</v-btn>
-          </v-card>
-        </v-col>
-        <v-col cols="12" sm="8">
-          <v-simple-table>
-            <tbody>
-              <template v-if="isLoading">
-                <tr v-for="n in 3" :key="n">
-                  <td>
-                    <v-skeleton-loader
-                      height="150px"
-                      ref="skeleton"
-                      class="mx-auto"
-                      type="article"
-                    />
+    <template>
+      <v-container>
+        <v-layout row>
+          <v-col cols="12" sm="4">
+            <v-card class="pa-6" flat style="border-radius:0">
+              <v-card-title class="px-0">{{user.firstName + ' ' + user.lastName}}</v-card-title>
+              <v-card-subtitle class="px-0 mb-4">Your Designation</v-card-subtitle>
+              <v-sheet class="d-flex justify-center my-10 mt-4">
+                <v-avatar color="grey" width="150px" height="150px">
+                  <v-icon dark size="80px">mdi-account-circle</v-icon>
+                </v-avatar>
+              </v-sheet>
+              <v-btn
+                style="border-radius:0"
+                block
+                color="primary"
+                width="130px"
+                class="text-none mb-3 mt-1"
+                @click="show = true"
+              >Create a Post</v-btn>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="8">
+            <v-simple-table>
+              <tbody>
+                <template v-if="isLoading">
+                  <tr v-for="n in 3" :key="n">
+                    <td>
+                      <v-skeleton-loader
+                        height="150px"
+                        ref="skeleton"
+                        class="mx-auto"
+                        type="article"
+                      />
+                    </td>
+                  </tr>
+                </template>
+                <tr class="table-row" v-for="blog in myBlogs" :key="blog.blogId">
+                  <td class="pa-4" style="position:relative">
+                    <v-btn
+                      @click="dialog = true"
+                      width="20px"
+                      color="transparent"
+                      elevation="0"
+                      style="position:absolute; right: 0; top:0;"
+                    >
+                      <v-icon size="16px">mdi-close</v-icon>
+                    </v-btn>
+                    <h2 class="mb-1">{{ blog.blogContent.blogTitle }}</h2>
+                    <p class="mb-1 caption font-italic grey--text">{{ blog.blogContent.createdAt }}</p>
+                    <p class="blog-text" v-html="trim(blog.blogContent.blogText)"></p>
+                    <ul style="list-style:none" class="d-flex pl-0">
+                      <li class="mr-3 overline primary--text text-lowercase">comments 0</li>
+                      <li class="mr-3 overline primary--text text-lowercase">likes 0</li>
+                      <li class="mr-3 overline primary--text text-lowercase">
+                        <router-link :to="`/blog/${blog.blogId}`">view full post</router-link>
+                      </li>
+                    </ul>
                   </td>
+                  <v-dialog v-model="dialog" max-width="500px" persistent class="dialog">
+                    <v-card style="border-radius: 0;" class="pa-3">
+                      <v-card-title class="title d-flex flex-column pa-2">
+                        <strong class="headline mb-0">Are you sure!</strong>
+                        <p class="font-weight-light mb-0">
+                          The blog will be deleted
+                          completely?
+                        </p>
+                      </v-card-title>
+                      <v-card-actions class="d-flex justify-center pa-2">
+                        <v-btn
+                          color="#F32013"
+                          dark
+                          width="100px"
+                          :loading="loading"
+                          style="border-radius:0"
+                          @click="deleteBlog(blog.blogId)"
+                          class="mr-4"
+                        >Yes</v-btn>
+                        <v-btn
+                          color="primary"
+                          width="100px"
+                          @click="dialog = false"
+                          style="border-radius:0"
+                        >No</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
                 </tr>
-              </template>
-              <tr class="table-row" v-for="blog in myBlogs" :key="blog.blogId">
-                <td class="pa-4" style="position:relative">
-                  <v-btn
-                    @click="dialog = true"
-                    width="20px"
-                    color="transparent"
-                    elevation="0"
-                    style="position:absolute; right: 0; top:0;"
-                  >
-                    <v-icon size="16px">mdi-close</v-icon>
-                  </v-btn>
-                  <h2 class="mb-1">{{ blog.blogContent.blogTitle }}</h2>
-                  <p class="mb-1 caption font-italic grey--text">{{ blog.blogContent.createdAt }}</p>
-                  <p class="blog-text" v-html="trim(blog.blogContent.blogText)"></p>
-                  <ul style="list-style:none" class="d-flex pl-0">
-                    <li class="mr-3 overline primary--text text-lowercase">comments 0</li>
-                    <li class="mr-3 overline primary--text text-lowercase">likes 0</li>
-                    <li class="mr-3 overline primary--text text-lowercase">
-                      <router-link :to="`/blog/${blog.blogId}`">view full post</router-link>
-                    </li>
-                  </ul>
-                </td>
-                <v-dialog v-model="dialog" max-width="500px" persistent class="dialog">
-                  <v-card style="border-radius: 0;">
-                    <v-card-title class="title">
-                      <strong>Are you sure!</strong>The blog will be deleted
-                      completely?
-                    </v-card-title>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="primary" @click="dialog = false" style="border-radius:0">No</v-btn>
-
-                      <v-btn
-                        color="#F32013"
-                        dark
-                        :loading="loading"
-                        class="ml-3"
-                        style="border-radius:0"
-                        @click="deleteBlog(blog.blogId)"
-                      >Yes</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
-              </tr>
-            </tbody>
-          </v-simple-table>
-        </v-col>
-      </v-layout>
-    </v-container>
-    <v-overlay v-if="show">
-      <v-form ref="form" lazy-validation>
-        <v-card color="#fff" width="1300px" light class="blog-editor-card" style="border-radius:0">
-          <v-card-title class="card-title mb-4 py-2">
-            <h3 class="white--text font-weight-medium">New Blog Entry</h3>
-            <v-spacer />
-            <v-btn @click="show = false" color="transparent" elevation="0">
-              <v-icon color="#fff">mdi-close</v-icon>
-            </v-btn>
-          </v-card-title>
-          <v-card-subtitle class="mt-0 mb-0 py-0 mb-n3">
-            <v-text-field
-              type="text"
-              label="Your title goes here!"
-              outlined
-              style="border-radius:0"
-              dense
-              v-model="newBlogData.blogTitle"
-              validate-on-blur
-              :rules="rules.text"
-            />
-          </v-card-subtitle>
-          <v-card-subtitle class="pb-0 mb-n1">
-            <v-file-input
-              style="border-radius:0"
-              label="Upload blog banner image"
-              prepend-inner-icon="mdi-camera"
-              prepend-icon
-              filled
-              v-model="newBlogData.image"
-              validate-on-blur
-              :rules="rules.upload"
-            ></v-file-input>
-          </v-card-subtitle>
-          <v-card-text style="overflow-y:scroll; max-height:400px">
-            <vue-editor v-model="newBlogData.blogText"></vue-editor>
-          </v-card-text>
-          <v-card-actions
-            style="background:#fff; z-index: 10; position:relative"
-            class="px-4 pt-0 mt-n4"
+              </tbody>
+            </v-simple-table>
+          </v-col>
+        </v-layout>
+      </v-container>
+      <v-overlay v-if="show">
+        <v-form ref="form" lazy-validation>
+          <v-card
+            color="#fff"
+            width="1300px"
+            light
+            class="blog-editor-card"
+            style="border-radius:0"
           >
-            <v-btn
-              :loading="loading"
-              @click="submitBlog"
-              color="primary"
-              class="text-capitalize px-4"
-              style="border-radius:0"
-            >Add Post</v-btn>
-            <v-spacer />
-            <v-switch color="primary" v-model="publishSwitch" label="Public"></v-switch>
-          </v-card-actions>
-        </v-card>
-      </v-form>
-    </v-overlay>
+            <v-overlay v-if="loading">
+              <v-card
+                color="#fff"
+                elevation="6"
+                style="height: 100px;display: flex;align-items: center;padding: 10px 30px;z-index: 100;"
+              >
+                <v-sheet width="600px">
+                  <v-progress-linear background-color="#bbb" :value="uploadProgress"></v-progress-linear>
+                </v-sheet>
+              </v-card>
+            </v-overlay>
+            <v-card-title class="card-title mb-4 py-2">
+              <h3 class="white--text font-weight-medium">New Blog Entry</h3>
+              <v-spacer />
+              <v-btn @click="show = false" color="transparent" elevation="0">
+                <v-icon color="#fff">mdi-close</v-icon>
+              </v-btn>
+            </v-card-title>
+            <v-card-subtitle class="mt-0 mb-0 py-0 mb-n3">
+              <v-text-field
+                type="text"
+                label="Your title goes here!"
+                outlined
+                style="border-radius:0"
+                dense
+                v-model="newBlogData.blogTitle"
+                validate-on-blur
+                :rules="rules.text"
+              />
+            </v-card-subtitle>
+            <v-card-subtitle class="pb-0 mb-n1">
+              <v-file-input
+                style="border-radius:0"
+                label="Upload blog banner image"
+                prepend-inner-icon="mdi-camera"
+                prepend-icon
+                filled
+                v-model="newBlogData.image"
+                validate-on-blur
+                :rules="rules.upload"
+              ></v-file-input>
+            </v-card-subtitle>
+            <v-card-text style="overflow-y:scroll; max-height:400px">
+              <vue-editor v-model="newBlogData.blogText"></vue-editor>
+            </v-card-text>
+            <v-card-actions
+              style="background:#fff; z-index: 4; position:relative"
+              class="px-4 pt-0 mt-n4"
+            >
+              <v-btn
+                :loading="loading"
+                @click="submitBlog"
+                color="primary"
+                class="text-capitalize px-4"
+                style="border-radius:0"
+              >Add Post</v-btn>
+              <v-spacer />
+              <v-switch color="primary" v-model="publishSwitch" label="Public"></v-switch>
+            </v-card-actions>
+          </v-card>
+        </v-form>
+      </v-overlay>
+    </template>
   </main>
 </template>
 
@@ -146,6 +172,7 @@
 import { Vue, Component, Ref } from "vue-property-decorator";
 import store from "@/store/store";
 import { mapActions, mapGetters } from "vuex";
+// @ts-ignore
 import { VueEditor } from "vue2-editor";
 
 @Component({
@@ -199,6 +226,14 @@ export default class MyBlogs extends Vue {
 
   get myBlogs() {
     return store.getters.myBlogs;
+  }
+
+  get uploadProgress() {
+    return store.getters.uploadProgress;
+  }
+
+  get user() {
+    return store.getters.user;
   }
 
   trim(value: string) {

@@ -91,6 +91,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import store from "@/store/store";
 
 export default {
   data() {
@@ -129,7 +130,7 @@ export default {
       if (this.$refs.form.validate()) {
         const payload = { ...this.userData };
         delete payload.confirmPassword;
-        this.$store.dispatch("signup", { userData: payload, vm: this });
+        store.dispatch.signup({ userData: payload, vm: this });
       }
     }
   }

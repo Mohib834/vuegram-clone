@@ -21,15 +21,20 @@ export type UserData = {
   email: string;
   phone: string;
   password: string;
-  confirmPassword: string;
+  photo?: File;
+  occupation?: string;
+  bio?: string;
 };
 
 export type State = {
-  activeUserUid: string;
+  activeUserUid: string | null;
   blogs: Array<Blog>;
   myBlogs: Array<Blog>;
   blog: Blog;
   authFormLoading: boolean;
   loading: boolean;
+  uploadProgress: number;
   showNav: boolean;
+  setupCompleted: boolean;
+  user: Omit<UserData, "password">;
 };

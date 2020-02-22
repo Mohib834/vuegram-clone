@@ -13,6 +13,11 @@
           height="200px"
           :src="blog.blogContent.blogImage"
         >
+          <template v-slot:placeholder>
+            <v-row class="fill-height ma-0" align="center" justify="center">
+              <v-progress-circular width="2" indeterminate color="primary"></v-progress-circular>
+            </v-row>
+          </template>
           <div class="img-overlay" />
           <v-card-title>{{blog.blogContent.blogTitle}}</v-card-title>
         </v-img>

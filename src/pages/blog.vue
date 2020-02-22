@@ -21,7 +21,16 @@
           width="100%"
           height="100%"
           :src="blog.blogContent.blogImage"
-        ></v-img>
+        >
+          <template v-slot:placeholder>
+            <v-row
+              class="fill-height ma-0"
+              align="center"
+              justify="center"
+              style="background:#f7f7f7;"
+            ></v-row>
+          </template>
+        </v-img>
       </v-container>
     </section>
     <section>
@@ -85,6 +94,7 @@
                     label="Comment..."
                     background-color="#fff"
                     v-model="comment"
+                    :disabled="loading"
                   ></v-textarea>
                   <v-btn
                     :loading="loading"

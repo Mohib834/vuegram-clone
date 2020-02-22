@@ -4,6 +4,7 @@ import MyBlogs from "@/pages/myblogs.vue";
 import Register from "../components/Register/Register.vue";
 import SignIn from "../components/SignIn/SignIn.vue";
 import Blog from "@/pages/blog.vue";
+import Setup from "@/pages/setup.vue";
 
 export const routes = [
   {
@@ -30,5 +31,10 @@ export const routes = [
   {
     path: "/blog/:id",
     component: Blog
+  },
+  {
+    path: "/setup",
+    name: "setup",
+    component: Setup
   }
 ];

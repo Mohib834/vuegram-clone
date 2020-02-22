@@ -53,6 +53,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import store from "@/store/store";
 
 export default {
   data() {
@@ -79,7 +80,7 @@ export default {
   methods: {
     handleSignIn() {
       if (this.$refs.form.validate()) {
-        this.$store.dispatch("signin", { vm: this, userData: this.userData });
+        store.dispatch.signin({ vm: this, userData: this.userData });
       }
     }
   }
