@@ -6,12 +6,21 @@
           <v-col cols="12" sm="4">
             <v-card class="pa-6" flat style="border-radius:0">
               <v-card-title class="px-0">{{user.firstName + ' ' + user.lastName}}</v-card-title>
-              <v-card-subtitle class="px-0 mb-4">Your Designation</v-card-subtitle>
-              <v-sheet class="d-flex justify-center my-10 mt-4">
-                <v-avatar color="grey" width="150px" height="150px">
+              <v-card-subtitle class="px-0 mb-4">{{ user.occupation }}</v-card-subtitle>
+              <v-sheet class="d-flex justify-center mt-5 mb-5 mt-4">
+                <v-avatar v-if="!user.photo" color="grey" width="200px" height="200px">
                   <v-icon dark size="80px">mdi-account-circle</v-icon>
                 </v-avatar>
+                <v-avatar v-else width="200px" height="200px">
+                  <img
+                    style="object-fit: cover; object-position:top"
+                    :src="user.photo"
+                    width="100%"
+                    height="100%"
+                  />
+                </v-avatar>
               </v-sheet>
+              <v-card-text class="text-center mt-n1">{{user.bio}}</v-card-text>
               <v-btn
                 style="border-radius:0"
                 block

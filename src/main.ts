@@ -10,8 +10,8 @@ Vue.config.productionTip = false;
 
 firebase.auth().onAuthStateChanged(user => {
   if (user) {
-    console.log(user);
     store.dispatch.storeActiveUserUid(user.uid);
+    store.dispatch.getUserData({ uid: user.uid });
   } else {
     store.dispatch.storeActiveUserUid(null);
   }

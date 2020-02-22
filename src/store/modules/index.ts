@@ -145,10 +145,28 @@ const store = defineModule({
       await auth.signOut();
       vm.$router.push({ name: "registration" });
     },
+    getUserData(context, payload: { uid: string }) {
+      const { commit } = modActionContext(context);
+      commit.CHANGE_LOADING_STATUS(true);
+
+      db.collection("users")
+        .doc(payload.uid)
+        .get()
+        .then(response => {
+          commit.SET_USER_DATA(response.data() as Omit<UserData, "password">);
+          commit.CHANGE_LOADING_STATUS(false);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
     storeNewUserData(
       context,
       payload: { userData: Omit<UserData, "password">; uid: string }
     ) {
+      const { commit } = modActionContext(context);
+      // set user state
+      commit.SET_USER_DATA(payload.userData);
       // Storing the user data in firestore.
       return db
         .collection("users")
@@ -180,8 +198,6 @@ const store = defineModule({
           let storageRef = storage.ref(getters.activeUserUid);
           // ## Upload the photo
 
-          console.log("inside photo setyp");
-
           let fileRef = storageRef.child("/user-image/" + payload.data.photo);
           let uploadTask = fileRef.put(payload.data.photo);
           uploadTask.on(
@@ -198,43 +214,53 @@ const store = defineModule({
             },
             () => {
               // ### Store the data.
+
               // Generate the photo download url
               uploadTask.snapshot.ref.getDownloadURL().then(url => {
                 // Add More data to existing data
+                let moreData = {
+                  photo: url,
+                  bio: payload.data.bio,
+                  occupation: payload.data.occupation
+                };
+
                 db.collection("users")
                   .doc(getters.activeUserUid!)
-                  .set(
-                    {
-                      photo: url,
-                      bio: payload.data.bio,
-                      occupation: payload.data.occupation
-                    },
-                    {
-                      merge: true
-                    }
-                  )
+                  .set(moreData, {
+                    merge: true
+                  })
                   .then(response => {
-                    // commit.SET_USER_DATA(payload.userData);
-                    console.log(response);
+                    // set user state with additional data
+                    let oldData = getters.user;
+                    commit.SET_USER_DATA({
+                      ...oldData,
+                      ...moreData
+                    });
+
                     payload.vm.$router.push({ name: "myblogs" });
                   });
               });
             }
           );
         } else {
+          let moreData = {
+            photo: null,
+            bio: payload.data.bio,
+            occupation: payload.data.occupation
+          };
+          // store additional data
           db.collection("users")
             .doc(getters.activeUserUid!)
-            .set(
-              {
-                photo: null,
-                bio: payload.data.bio,
-                occupation: payload.data.occupation
-              },
-              {
-                merge: true
-              }
-            )
+            .set(moreData, {
+              merge: true
+            })
             .then(() => {
+              // set user state with additional data
+              let oldData = getters.user;
+              commit.SET_USER_DATA({
+                ...oldData,
+                ...moreData
+              });
               payload.vm.$router.push({ name: "myblogs" });
             });
         }

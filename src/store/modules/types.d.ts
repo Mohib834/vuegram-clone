@@ -21,7 +21,7 @@ export type UserData = {
   email: string;
   phone: string;
   password: string;
-  photo?: File;
+  photo?: File | null;
   occupation?: string;
   bio?: string;
 };
