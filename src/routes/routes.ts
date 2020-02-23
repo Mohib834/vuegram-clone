@@ -19,8 +19,7 @@ export const routes = [
   {
     path: "/blogs",
     component: Blogs,
-    name: "blogs",
-    meta: { requireAuth: true }
+    name: "blogs"
   },
   {
     path: "/myblogs",
@@ -35,6 +34,7 @@ export const routes = [
   {
     path: "/setup",
     name: "setup",
-    component: Setup
+    component: Setup,
+    meta: { requireAuth: true }
   }
 ];

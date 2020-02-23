@@ -1,5 +1,5 @@
 <template>
-  <v-form lazy-validation ref="form" @submit.prevent="handleSignup">
+  <v-form lazy-validation ref="form" @submit.prevent>
     <h1 class="display-1 font-weight-bold mb-2">Get Started</h1>
     <p class="subheading-2 grey--text">Create your account and start using it for free</p>
     <v-row>
@@ -74,7 +74,7 @@
           class="text-capitalize"
           style="border-radius:0"
           type="submit"
-          :loading="authFormLoading"
+          :loading="isLoading"
         >Sign up</v-btn>
       </v-col>
     </v-row>
@@ -111,13 +111,15 @@ export default class Register extends Vue {
   @Ref("form") form!: HTMLFormElement;
 
   userData = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: ""
+    firstName: "Mohib",
+    lastName: "Arshi",
+    email: "mohibarshi10@gmail.com",
+    phone: "1234567890",
+    password: "123456789",
+    confirmPassword: "123456789"
   };
+
+  isLoading = false;
 
   rules = {
     email: [
@@ -136,25 +138,22 @@ export default class Register extends Vue {
     phone: [(v: string) => v.length === 10 || "Must be 10 digits !"]
   };
 
-  get authFormLoading() {
-    return store.getters.authFormLoading;
-  }
-
   handleSignup() {
     if (this.form.validate()) {
+      this.isLoading = true;
       const payload = { ...this.userData };
       delete payload.confirmPassword;
-      store.dispatch.signup({ userData: payload, vm: this });
+      store.dispatch
+        .signup({ userData: payload, vm: this })
+        .then(() => {
+          this.isLoading = false;
+          this.$router.push({name: 'setup'})
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 }
-
-//   computed: {
-//     ...mapGetters(["authFormLoading"])
-//   },
-//   methods: {
-
-//   }
-// };
 </script>
 

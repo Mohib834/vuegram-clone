@@ -84,9 +84,7 @@ import { Route } from "vue-router";
 @Component({
   beforeRouteEnter(to: Route, from: Route, next: Function) {
     next((vm: Vue) => {
-      vm.$store.getters.user.setupCompleted === false
-        ? next()
-        : next("/myblogs");
+      store.getters.user.setupCompleted ? next("/myblogs") : next();
     });
   }
 })
@@ -104,6 +102,10 @@ export default class Setup extends Vue {
 
   get uploadProgress() {
     return store.getters.uploadProgress;
+  }
+
+  get loading() {
+    return store.getters.loading;
   }
 
   nextStep() {

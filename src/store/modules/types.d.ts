@@ -6,7 +6,10 @@ export type Blog = {
     blogTitle: string;
     blogText: string;
     createdAt: string;
-    createdBy: string;
+    createdBy: {
+      name: string;
+      photo?: File | null;
+    };
     comments?: Array<{
       text: string;
       by: string;
@@ -32,7 +35,6 @@ export type State = {
   blogs: Array<Blog>;
   myBlogs: Array<Blog>;
   blog: Blog;
-  authFormLoading: boolean;
   loading: boolean;
   uploadProgress: number;
   showNav: boolean;

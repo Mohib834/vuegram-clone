@@ -16,7 +16,7 @@
             <v-avatar class="mr-2" v-else>
               <v-icon dark size="40px">mdi-account-circle</v-icon>
             </v-avatar>
-            {{blog.blogContent.createdBy}}
+            {{blog.blogContent.createdBy.name}}
           </span>
         </div>
         <v-img
@@ -67,11 +67,14 @@
                     >{{ comment.createdAt }}</span>
                     <v-avatar
                       class="mr-2"
-                      v-if="user.photo"
+                      v-if="blog.blogContent.createdBy.photo"
                       size="70px"
                       style="position:relative; left: -6px;top:-30px"
                     >
-                      <img :src="user.photo" style="object-position:top; object-fit:cover;" />
+                      <img
+                        :src="blog.blogContent.createdBy.photo"
+                        style="object-position:top; object-fit:cover;"
+                      />
                     </v-avatar>
                     <v-avatar class="mr-2" v-else style="position:relative; left: -6px;top:-16px">
                       <v-icon color="primary" dark size="70px">mdi-account-circle</v-icon>

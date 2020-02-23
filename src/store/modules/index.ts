@@ -19,7 +19,6 @@ const store = defineModule({
     blogs: [],
     myBlogs: [],
     blog: {} as Blog,
-    authFormLoading: false,
     loading: false,
     showNav: true,
     uploadProgress: 0,
@@ -42,9 +41,6 @@ const store = defineModule({
     },
     myBlogs(state: State) {
       return state.myBlogs;
-    },
-    authFormLoading(state: State) {
-      return state.authFormLoading;
     },
     loading(state: State) {
       return state.loading;
@@ -75,9 +71,6 @@ const store = defineModule({
     SET_MY_BLOGS(state: State, payload: Array<Blog>) {
       state.myBlogs = payload;
     },
-    CHANGE_AUTH_LOADING_STATUS(state: State, payload: boolean) {
-      state.authFormLoading = payload;
-    },
     CHANGE_LOADING_STATUS(state: State, payload: boolean) {
       state.loading = payload;
     },
@@ -100,75 +93,69 @@ const store = defineModule({
   actions: {
     signup(context, payload: { userData: UserData; vm: Vue }) {
       const { commit, dispatch } = modActionContext(context);
-      // Set the authFormLoading to true
-      commit.CHANGE_AUTH_LOADING_STATUS(true);
-
       const { userData, vm } = payload;
-
+      console.log("inside signup");
       // Creating a new User
-      auth
-        .createUserWithEmailAndPassword(userData.email, userData.password)
-        .then(response => {
-          // const { uid } = response.user;
-          // Dispatching an action which will store the data in firestore
-          delete userData.password;
-          userData["setupCompleted"] = false;
+      return new Promise((resolve, reject) => {
+        auth
+          .createUserWithEmailAndPassword(userData.email, userData.password)
+          .then(response => {
+            // const { uid } = response.user;
+            // Dispatching an action which will store the data in firestore
+            delete userData.password;
+            userData["setupCompleted"] = false;
 
-          if (response.user)
-            dispatch.storeNewUserData({
-              userData,
-              uid: response.user.uid
+            if (response.user)
+              dispatch.storeNewUserData({
+                userData,
+                uid: response.user.uid
+              });
+            resolve();
+          })
+          .catch(err => {
+            console.log("inside Catch");
+            console.log(err);
+            reject();
+            commit.TOGGLE_SNACKBAR({
+              toggle: true,
+              message: err.message,
+              color: "#CA0B00"
             });
-
-          vm.$router.push({ name: "setup" });
-          // Set the authFormLoading to false
-          commit.CHANGE_AUTH_LOADING_STATUS(false);
-        })
-        .catch(err => {
-          console.log(err);
-          // Set the authFormLoading to false
-          commit.CHANGE_AUTH_LOADING_STATUS(false);
-          commit.TOGGLE_SNACKBAR({
-            toggle: true,
-            message: err.message,
-            color: "#CA0B00"
           });
-        });
+      });
     },
+
     signin(
       context,
       payload: { userData: { email: string; password: string }; vm: Vue }
     ) {
       const { commit } = modActionContext(context);
 
-      // Set the authFormLoading to true
-      commit.CHANGE_AUTH_LOADING_STATUS(true);
       const { userData, vm } = payload;
 
-      // Creating a new User
-      auth
-        .signInWithEmailAndPassword(userData.email, userData.password)
-        .then(response => {
-          // Set the authFormLoading to false
-          commit.CHANGE_AUTH_LOADING_STATUS(false);
-          // Redirect
-          vm.$router.push({ name: "myblogs" });
-        })
-        .catch(err => {
-          console.log(err);
-          // Set the authFormLoading to false
-          commit.CHANGE_AUTH_LOADING_STATUS(false);
-          commit.TOGGLE_SNACKBAR({
-            toggle: true,
-            message: err.message,
-            color: "#CA0B00"
+      return new Promise((resolve, reject) => {
+        // Creating a new User
+        auth
+          .signInWithEmailAndPassword(userData.email, userData.password)
+          .then(response => {
+            // Redirect
+            resolve();
+          })
+          .catch(err => {
+            console.log(err);
+            reject(err);
+            commit.TOGGLE_SNACKBAR({
+              toggle: true,
+              message: err.message,
+              color: "#CA0B00"
+            });
           });
-        });
+      });
     },
     async signout(context, payload: { vm: Vue }) {
       const { vm } = payload;
       await auth.signOut();
-      vm.$router.push({ name: "registration" });
+      vm.$router.push({ name: "signin" });
     },
     getUserData(context, payload: { uid: string }) {
       const { commit } = modActionContext(context);
@@ -304,12 +291,12 @@ const store = defineModule({
     },
     async submitBlog(
       context,
-      payload: { blogText: string; blogTitle: string; image: File; by: string }
+      payload: { blogText: string; blogTitle: string; image: File }
     ) {
       const { commit, dispatch, getters } = modActionContext(context);
       commit.CHANGE_LOADING_STATUS(true);
       commit.SET_UPLOAD_PROGRESS(0);
-      const { activeUserUid } = getters;
+      const { activeUserUid, user } = getters;
 
       let blog: Blog = {
         uid: activeUserUid!,
@@ -320,7 +307,10 @@ const store = defineModule({
           createdAt: moment()
             .subtract(1, "days")
             .format("DD-MM-YYYY | h:mm:ss a"),
-          createdBy: payload.by
+          createdBy: {
+            name: user.firstName + " " + user.lastName,
+            photo: user.photo
+          }
         }
       };
 

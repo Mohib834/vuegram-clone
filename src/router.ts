@@ -16,7 +16,8 @@ router.beforeEach(async (to: Route, from: Route, next: Function) => {
 
   if (requireAuth) {
     firebase.auth().onAuthStateChanged(user => {
-      if (user) next();
+      if (user) return next();
+      next("/signin");
     });
   } else next();
 });

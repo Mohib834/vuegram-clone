@@ -218,7 +218,6 @@ export default class MyBlogs extends Vue {
     blogText: string;
     blogTitle: string;
     image: File | null;
-    by: string;
   };
   rules: {
     text: Array<Function>;
@@ -236,8 +235,7 @@ export default class MyBlogs extends Vue {
     this.newBlogData = {
       blogText: "",
       blogTitle: "",
-      image: null,
-      by: ""
+      image: null
     };
     this.dialog = false;
 
@@ -277,8 +275,6 @@ export default class MyBlogs extends Vue {
   submitBlog() {
     if (this.form.validate()) {
       this.loading = true;
-
-      this.newBlogData.by = this.user.firstName + " " + this.user.lastName;
 
       store.dispatch
         .submitBlog(

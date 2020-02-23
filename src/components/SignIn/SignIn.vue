@@ -1,6 +1,6 @@
 <template>
   <div class="align-self-center" style="width:100%">
-    <v-form ref="form" lazy-validation @submit.prevent="handleSignIn" style="flex: 1">
+    <v-form ref="form" lazy-validation @submit.prevent style="flex: 1">
       <h1 class="display-1 font-weight-bold mb-2">Login To Dashboard</h1>
       <!-- <p class="subheading-2 grey--text">Create your account and start using it for free</p> -->
       <v-row>
@@ -30,12 +30,12 @@
       <v-row>
         <v-col class="pb-1">
           <v-btn
-            @click="handleSignIn(userData)"
+            @click="handleSignIn()"
             color="primary"
             width="130px"
             class="text-capitalize"
             style="border-radius:0"
-            :loading="authFormLoading"
+            :loading="isLoading"
             type="submit"
           >Login</v-btn>
         </v-col>
@@ -76,6 +76,9 @@ export default class Signin extends Vue {
     email: "",
     password: ""
   };
+
+  isLoading = false;
+
   rules = {
     email: [
       (v: string) => v.length === 0 && "Email is required !",
@@ -87,13 +90,13 @@ export default class Signin extends Vue {
     ]
   };
 
-  get authFormLoading() {
-    return store.getters.authFormLoading;
-  }
-
   handleSignIn() {
     if (this.form.validate()) {
-      store.dispatch.signin({ vm: this, userData: this.userData });
+      this.isLoading = true;
+      store.dispatch.signin({ vm: this, userData: this.userData }).then(() => {
+        this.isLoading = false;
+        this.$router.push({ name: "blogs" });
+      });
     }
   }
 }
