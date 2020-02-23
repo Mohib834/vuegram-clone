@@ -1,3 +1,13 @@
+export type Comment = {
+  text: string;
+  createdAt: string;
+  createdBy: {
+    uid: string;
+    name: string;
+    photo?: File | null;
+  };
+};
+
 export type Blog = {
   uid: string;
   blogId?: string;
@@ -10,11 +20,7 @@ export type Blog = {
       name: string;
       photo?: File | null;
     };
-    comments?: Array<{
-      text: string;
-      by: string;
-      createdAt: string;
-    }>;
+    comments?: Array<Comment>;
   };
 };
 

@@ -24,7 +24,10 @@
                   />
                 </v-avatar>
               </v-sheet>
-              <v-card-text class="text-center mt-n1">{{user.bio}}</v-card-text>
+              <v-card-text class="text-center mt-n4 mb-3">
+                <strong class="d-block" style="text-decoration: underline">Bio</strong>
+                {{user.bio}}
+              </v-card-text>
               <v-btn
                 style="border-radius:0"
                 block
@@ -44,10 +47,10 @@
                 contain
                 :src="require('@/assets/img/empty.svg')"
               >
-                <h3
+                <!-- <h3
                   class="headline text-center primary--text"
                   style="position:absolute; top:0; left:50%; transform:translate(-50%)"
-                >Blogs Not Found !</h3>
+                >Blogs Not Found !</h3>-->
               </v-img>
             </template>
             <template v-else>
@@ -78,11 +81,15 @@
                       <p class="blog-text" v-html="trim(blog.blogContent.blogText)"></p>
                       <ul style="list-style:none" class="d-flex pl-0">
                         <li
+                          style="text-decoration:none"
                           class="mr-3 overline primary--text text-lowercase"
                         >comments {{blog.blogContent.comments ? blog.blogContent.comments.length : 0}}</li>
-                        <li class="mr-3 overline primary--text text-lowercase">likes 0</li>
+                        <!-- <li class="mr-3 overline primary--text text-lowercase">likes 0</li> -->
                         <li class="mr-3 overline primary--text text-lowercase">
-                          <router-link :to="`/blog/${blog.blogId}`">view full post</router-link>
+                          <router-link
+                            style="text-decoration:none"
+                            :to="`/blog/${blog.blogId}`"
+                          >view full post</router-link>
                         </li>
                       </ul>
                     </td>

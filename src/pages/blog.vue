@@ -10,8 +10,11 @@
           >{{ blog.blogContent.createdAt }}</span>
           <h1 class="display-4 white--text text-center">{{ blog.blogContent.blogTitle }}</h1>
           <span class="d-block white--text text-center mt-6">
-            <v-avatar class="mr-2" v-if="user.photo" size="40px">
-              <img :src="user.photo" style="object-position:top; object-fit:cover;" />
+            <v-avatar class="mr-2" v-if="blog.blogContent.createdBy.photo" size="40px">
+              <img
+                :src="blog.blogContent.createdBy.photo"
+                style="object-position:top; object-fit:cover;"
+              />
             </v-avatar>
             <v-avatar class="mr-2" v-else>
               <v-icon dark size="40px">mdi-account-circle</v-icon>
@@ -67,17 +70,22 @@
                     >{{ comment.createdAt }}</span>
                     <v-avatar
                       class="mr-2"
-                      v-if="blog.blogContent.createdBy.photo"
-                      size="70px"
-                      style="position:relative; left: -6px;top:-30px"
+                      v-if="comment.createdBy.photo"
+                      size="60px"
+                      style="position:relative; left: -6px;top:-24px"
                     >
                       <img
-                        :src="blog.blogContent.createdBy.photo"
+                        :src="comment.createdBy.photo"
                         style="object-position:top; object-fit:cover;"
                       />
                     </v-avatar>
-                    <v-avatar class="mr-2" v-else style="position:relative; left: -6px;top:-16px">
-                      <v-icon color="primary" dark size="70px">mdi-account-circle</v-icon>
+                    <v-avatar
+                      class="mr-2"
+                      v-else
+                      size="60px"
+                      style="position:relative; left: -6px;top:-24px"
+                    >
+                      <v-icon size="70" color="primary" dark>mdi-account-circle</v-icon>
                     </v-avatar>
                     <v-sheet
                       class="d-flex flex-column"
@@ -85,7 +93,9 @@
                       color="transparent"
                       min-height="70px"
                     >
-                      <v-list-item-title class="mb-1 mr-auto font-weight-bold">{{ comment.by }}</v-list-item-title>
+                      <v-list-item-title
+                        class="mb-1 mr-auto font-weight-bold"
+                      >{{ comment.createdBy.name }}</v-list-item-title>
                       <v-list-item-action-text
                         class="font-weight-bold"
                         style="line-height:1.4; display:block"
@@ -101,19 +111,20 @@
                     </v-sheet>
                   </v-list-item>
                 </v-list>
-                <v-form ref="form" class="d-flex flex-column" @submit.prevent="submitComment">
+                <v-form ref="form" class="d-flex flex-column" @submit.prevent>
                   <v-textarea
                     outlined
                     name="input-7-4"
                     label="Comment..."
                     background-color="#fff"
                     v-model="comment"
-                    :disabled="loading"
+                    :disabled="isLoading"
                   ></v-textarea>
                   <v-btn
-                    :loading="loading"
+                    :loading="isLoading"
                     @click="submitComment"
                     color="primary"
+                    type="submit"
                     dark
                     class="ml-auto font-weight-bold"
                   >Post</v-btn>
@@ -136,6 +147,7 @@ import { Blog as BlogType } from "@/store/modules/types";
 export default class Blog extends Vue {
   comment = "";
   renderTemplate = false;
+  isLoading = false;
 
   @Ref("form") form!: HTMLFormElement;
 
@@ -163,6 +175,7 @@ export default class Blog extends Vue {
 
   submitComment() {
     // console.log(this.$route.params);
+    this.isLoading = true;
     store.dispatch
       .addComment({
         comment: this.comment,
@@ -170,9 +183,11 @@ export default class Blog extends Vue {
       })
       .then(() => {
         this.form.reset();
+        this.isLoading = false;
       })
       .catch(() => {
         this.form.reset();
+        this.isLoading = false;
       });
   }
 

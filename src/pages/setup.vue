@@ -114,13 +114,12 @@ export default class Setup extends Vue {
     }
   }
 
-  async setupUser() {
+  setupUser() {
     this.isUploading = true;
-    await store.dispatch.setupUser({
+    store.dispatch.setupUser({
       data: this.userAdditionalDetails,
       vm: this
     });
-    this.isUploading = false;
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
-  <header class="mb-8" v-if="showNav">
-    <v-app-bar color="primary" dark>
+  <header style="margin-bottom:90px;" v-if="showNav">
+    <v-app-bar color="primary" dark fixed>
       <v-container>
         <v-layout>
           <v-toolbar-title style="font-size:24px" class="d-flex align-center font-weight-bold">

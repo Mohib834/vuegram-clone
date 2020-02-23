@@ -111,12 +111,12 @@ export default class Register extends Vue {
   @Ref("form") form!: HTMLFormElement;
 
   userData = {
-    firstName: "Mohib",
-    lastName: "Arshi",
-    email: "mohibarshi10@gmail.com",
-    phone: "1234567890",
-    password: "123456789",
-    confirmPassword: "123456789"
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: ""
   };
 
   isLoading = false;
@@ -147,7 +147,7 @@ export default class Register extends Vue {
         .signup({ userData: payload, vm: this })
         .then(() => {
           this.isLoading = false;
-          this.$router.push({name: 'setup'})
+          this.$router.push({ name: "setup" });
         })
         .catch(err => {
           console.log(err);

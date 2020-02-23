@@ -2,10 +2,11 @@ import Vue from "vue";
 import Vuex from "vuex";
 import { moduleActionContext } from "../store";
 import { State, UserData } from "./types";
-import firebase, { FirebaseError } from "firebase";
+import firebase from "firebase";
 import { defineModule } from "direct-vuex";
 import { Blog } from "./types";
 import moment from "moment";
+import { Comment } from "./types";
 
 const auth = firebase.auth();
 const db = firebase.firestore();
@@ -212,6 +213,7 @@ const store = defineModule({
 
           let fileRef = storageRef.child("/user-image/" + payload.data.photo);
           let uploadTask = fileRef.put(payload.data.photo);
+
           uploadTask.on(
             "state_changed",
             snapshot => {
@@ -385,6 +387,9 @@ const store = defineModule({
       commit.CHANGE_LOADING_STATUS(true);
       let blogs: Array<Blog> = [];
       const { activeUserUid } = getters;
+
+      commit.SET_MY_BLOGS([]);
+
       db.collection("blogs")
         .where("uid", "==", activeUserUid)
         .onSnapshot(snapshot => {
@@ -440,34 +445,40 @@ const store = defineModule({
     addComment(context, payload: { comment: string; blogId: string }) {
       const { dispatch, getters } = modActionContext(context);
       const { comments } = getters.blog.blogContent;
+      const { user, activeUserUid } = getters;
 
       let blogComment = {
         text: payload.comment,
-        by: "Mohib", // later
         createdAt: moment()
           .subtract(1, "days")
-          .format("DD-MM-YYYY | h:mm:ss a")
+          .format("DD-MM-YYYY | h:mm:ss a"),
+        createdBy: {
+          name: user.firstName + " " + user.lastName,
+          photo: user.photo,
+          uid: activeUserUid
+        }
       };
 
-      let blogComments: { text: string; by: string; createdAt: string }[] | [];
+      let oldComments: Array<Comment> | [];
 
       if (comments) {
-        blogComments = comments.map(comment => comment);
+        oldComments = comments.map(c => c);
       } else {
-        blogComments = [];
+        oldComments = [];
       }
 
-      blogComments = [...blogComments, blogComment];
+      let newComments = [...oldComments, blogComment];
 
       return new Promise((resolve, reject) => {
         db.collection("blogs")
           .doc(payload.blogId)
           .update({
-            "blogContent.comments": blogComments
+            "blogContent.comments": newComments
           })
           .then(response => {
-            dispatch.fetchABlog({ id: payload.blogId });
-            resolve();
+            dispatch.fetchABlog({ id: payload.blogId }).then(() => {
+              resolve();
+            });
           })
           .catch(err => {
             reject();
