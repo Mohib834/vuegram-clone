@@ -8,7 +8,9 @@
           <span
             class="d-block white--text text-center mt-n3 caption"
           >{{ blog.blogContent.createdAt }}</span>
-          <h1 class="display-4 white--text text-center">{{ blog.blogContent.blogTitle }}</h1>
+          <h1
+            class="display-3 my-5 font-weight-bold white--text text-center"
+          >{{ blog.blogContent.blogTitle }}</h1>
           <span class="d-block white--text text-center mt-6">
             <v-avatar class="mr-2" v-if="blog.blogContent.createdBy.photo" size="40px">
               <img
@@ -53,9 +55,9 @@
 
       <v-container>
         <v-row>
-          <v-col>
+          <v-col cols="12">
             <v-card color="#f7f7f7" elevation="0" class="pa-10">
-              <v-sheet width="680px" color="transparent" class="mx-auto">
+              <v-sheet max-width="680px" color="transparent" class="mx-auto">
                 <strong class="mb-10 d-block">{{ commentsNum }}</strong>
                 <v-list color="transparent">
                   <v-list-item
@@ -106,7 +108,7 @@
                     </v-sheet>
                   </v-list-item>
                 </v-list>
-                <v-form v-if="false" ref="form" class="d-flex flex-column" @submit.prevent>
+                <v-form v-if="activeUserUid" ref="form" class="d-flex flex-column" @submit.prevent>
                   <v-textarea
                     outlined
                     name="input-7-4"

@@ -1,6 +1,6 @@
 <template>
   <v-card
-    width="700px"
+    :width="$vuetify.breakpoint.mdAndDown ? '400px' : '700px'"
     height="400px"
     class="mx-auto"
     style="box-shadow: 0 10px 10px rgba(0,0,0,.1)"
@@ -13,7 +13,7 @@
         style="height: 100px;display: flex;align-items: center;padding: 4px 30px;z-index: 100;"
       >
         <v-card-title class="primary--text font-weight-bold">Please Wait</v-card-title>
-        <v-sheet width="600px">
+        <v-sheet :width="$vuetify.breakpoint.mdAndDown ? '300px' : '600px'">
           <v-progress-linear background-color="#bbb" :value="uploadProgress"></v-progress-linear>
         </v-sheet>
       </v-card>

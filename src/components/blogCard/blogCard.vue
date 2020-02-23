@@ -1,11 +1,12 @@
 <template>
   <v-layout row v-if="renderTemplate">
-    <v-col cols="4" v-for="(blog, i) in blogs" :key="i">
+    <v-col cols="12" sm="6" md="4" v-for="(blog, i) in blogs" :key="i">
       <v-card
         class="blog-card d-flex flex-column mx-auto"
         elevation="5"
         height="410px"
         style="border-radius:0"
+        :width="$vuetify.breakpoint.smAndDown ? '380px' : 'initial'"
       >
         <v-img
           class="white--text align-end blog-img"

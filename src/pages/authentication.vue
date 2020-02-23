@@ -2,11 +2,11 @@
   <main style="height:100vh">
     <v-container style="height:100vh" class="d-flex align-center">
       <v-row>
-        <v-col class="d-flex align-center" cols="12" sm="6">
+        <v-col v-if="$vuetify.breakpoint.mdAndUp" class="d-flex align-center" sm="6">
           <v-img height="540px" width="670px" contain :src="require('@/assets/img/banner.svg')" />
         </v-col>
-        <v-col cols="12" sm="6">
-          <v-container class="d-flex" style="padding: 100px; height: 100%;">
+        <v-col cols="12" md="6">
+          <v-container class="d-flex justify-center" style="padding: 100px; height: 100%;">
             <router-view />
           </v-container>
         </v-col>

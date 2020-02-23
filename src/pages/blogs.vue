@@ -3,13 +3,21 @@
     <v-container>
       <blogCard :blogs="blogs" />
       <v-row v-if="loading">
-        <v-col class="px-0" v-for="n in 3" :key="n">
-          <v-skeleton-loader class="mx-auto" max-width="350" type="card"></v-skeleton-loader>
+        <v-col cols="12" sm="4" class="px-0" v-for="n in 3" :key="n">
+          <v-skeleton-loader
+            class="mx-auto"
+            :max-width="$vuetify.breakpoint.mdAndDown ? '300px' : '380px'"
+            type="card"
+          ></v-skeleton-loader>
         </v-col>
       </v-row>
       <v-row v-if="loading">
-        <v-col class="px-0" v-for="n in 3" :key="n">
-          <v-skeleton-loader class="mx-auto" max-width="350" type="card"></v-skeleton-loader>
+        <v-col cols="12" sm="4" class="px-0" v-for="n in 3" :key="n">
+          <v-skeleton-loader
+            class="mx-auto"
+            :max-width="$vuetify.breakpoint.mdAndDown ? '300px' : '380px'"
+            type="card"
+          ></v-skeleton-loader>
         </v-col>
       </v-row>
     </v-container>

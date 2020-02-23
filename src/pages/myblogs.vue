@@ -3,8 +3,9 @@
     <template v-if="renderTemplate">
       <v-container>
         <v-layout row>
-          <v-col cols="12" sm="4">
+          <v-col cols="12" sm="4" class="mb-12">
             <v-card
+              width
               class="pa-6"
               flat
               style="border-radius:0; box-shadow: 0 10px 15px rgba(0,0,0,.1)"
@@ -34,7 +35,7 @@
                 color="primary"
                 width="130px"
                 class="text-none mb-3 mt-1"
-                @click="show = true"
+                @click="openPostDialog"
               >Create a Post</v-btn>
             </v-card>
           </v-col>
@@ -132,7 +133,7 @@
         <v-form ref="form" lazy-validation>
           <v-card
             color="#fff"
-            width="1300px"
+            max-width="1300px"
             light
             class="blog-editor-card"
             style="border-radius:0"
@@ -145,7 +146,7 @@
                 style="height: 100px;display: flex;align-items: center;padding: 4px 30px;z-index: 100;"
               >
                 <v-card-title class="primary--text font-weight-bold">Please Wait</v-card-title>
-                <v-sheet width="600px">
+                <v-sheet :width="$vuetify.breakpoint.mdAndDown ? '300px' : '600px'">
                   <v-progress-linear background-color="#bbb" :value="uploadProgress"></v-progress-linear>
                 </v-sheet>
               </v-card>
@@ -277,6 +278,15 @@ export default class MyBlogs extends Vue {
 
   trim(value: string) {
     return value.slice(0, 200) + "...";
+  }
+
+  openPostDialog() {
+    this.newBlogData = {
+      blogText: "",
+      blogTitle: "",
+      image: null
+    };
+    this.show = true;
   }
 
   submitBlog() {

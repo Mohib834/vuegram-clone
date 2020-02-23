@@ -93,10 +93,15 @@ export default class Signin extends Vue {
   handleSignIn() {
     if (this.form.validate()) {
       this.isLoading = true;
-      store.dispatch.signin({ vm: this, userData: this.userData }).then(() => {
-        this.isLoading = false;
-        this.$router.push({ name: "blogs" });
-      });
+      store.dispatch
+        .signin({ vm: this, userData: this.userData })
+        .then(() => {
+          this.isLoading = false;
+          this.$router.push({ name: "blogs" });
+        })
+        .catch(() => {
+          this.isLoading = false;
+        });
     }
   }
 }
