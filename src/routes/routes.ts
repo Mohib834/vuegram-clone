@@ -5,6 +5,7 @@ import Register from "../components/Register/Register.vue";
 import SignIn from "../components/SignIn/SignIn.vue";
 import Blog from "@/pages/blog.vue";
 import Setup from "@/pages/setup.vue";
+import NotFound from "@/pages/notFound.vue";
 
 export const routes = [
   {
@@ -36,5 +37,13 @@ export const routes = [
     name: "setup",
     component: Setup,
     meta: { requireAuth: true }
+  },
+  {
+    path: "/",
+    redirect: "/blogs"
+  },
+  {
+    path: "*",
+    component: NotFound
   }
 ];

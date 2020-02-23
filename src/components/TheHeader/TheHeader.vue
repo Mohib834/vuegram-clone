@@ -21,8 +21,13 @@
             hide-slider
           >
             <v-tab style="font-size:15px" class="text-capitalize" :to="{name: 'blogs'}">All Blogs</v-tab>
-            <v-tab style="font-size:15px" class="text-capitalize" :to="{name: 'myblogs'}">My Blogs</v-tab>
-            <v-tab style="font-size:15px" class="text-capitalize" @click.prevent="logout">Logout</v-tab>
+            <template v-if="userLoggedIn">
+              <v-tab style="font-size:15px" class="text-capitalize" :to="{name: 'myblogs'}">My Blogs</v-tab>
+              <v-tab style="font-size:15px" class="text-capitalize" @click.prevent="logout">Logout</v-tab>
+            </template>
+            <template v-else>
+              <v-tab style="font-size:15px" class="text-capitalize" :to="{name: 'signin'}">Login</v-tab>
+            </template>
           </v-tabs>
         </v-layout>
       </v-container>
@@ -38,6 +43,10 @@ import store from "@/store/store";
 export default class TheHeader extends Vue {
   get showNav() {
     return store.getters.showNav;
+  }
+
+  get userLoggedIn() {
+    return store.getters.activeUserUid;
   }
 
   logout() {

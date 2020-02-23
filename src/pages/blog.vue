@@ -59,8 +59,8 @@
                 <strong class="mb-10 d-block">{{ commentsNum }}</strong>
                 <v-list color="transparent">
                   <v-list-item
-                    class="px-0 mb-12 d-flex align-center"
-                    style="position: relative; transition:all .3s"
+                    class="px-0 d-flex align-center"
+                    style="margin-bottom: 50px; position: relative; transition:all .3s"
                     v-for="(comment, i) in blog.blogContent.comments"
                     :key="i"
                   >
@@ -72,7 +72,7 @@
                       class="mr-2"
                       v-if="comment.createdBy.photo"
                       size="60px"
-                      style="position:relative; left: -6px;top:-24px"
+                      style="position:relative; left: -6px;"
                     >
                       <img
                         :src="comment.createdBy.photo"
@@ -83,16 +83,11 @@
                       class="mr-2"
                       v-else
                       size="60px"
-                      style="position:relative; left: -6px;top:-24px"
+                      style="position:relative; left: -6px;"
                     >
                       <v-icon size="70" color="primary" dark>mdi-account-circle</v-icon>
                     </v-avatar>
-                    <v-sheet
-                      class="d-flex flex-column"
-                      width="100%"
-                      color="transparent"
-                      min-height="70px"
-                    >
+                    <v-sheet class="d-flex flex-column" width="100%" color="transparent">
                       <v-list-item-title
                         class="mb-1 mr-auto font-weight-bold"
                       >{{ comment.createdBy.name }}</v-list-item-title>
@@ -100,18 +95,18 @@
                         class="font-weight-bold"
                         style="line-height:1.4; display:block"
                       >{{ comment.text }}</v-list-item-action-text>
-                      <v-btn
+                      <!-- <v-btn
                         color="#F32013"
                         height="30px"
                         class="mb-3 font-weight-bold mt-3 ml-auto"
                         dark
                         style="border-radius:0; font-size: 10px;"
-                      >delete</v-btn>
-                      <v-divider />
+                      >delete</v-btn>-->
+                      <v-divider style="position:relative; top:22px;" />
                     </v-sheet>
                   </v-list-item>
                 </v-list>
-                <v-form ref="form" class="d-flex flex-column" @submit.prevent>
+                <v-form v-if="false" ref="form" class="d-flex flex-column" @submit.prevent>
                   <v-textarea
                     outlined
                     name="input-7-4"
@@ -129,6 +124,10 @@
                     class="ml-auto font-weight-bold"
                   >Post</v-btn>
                 </v-form>
+                <v-sheet v-else color="transparent" class="text-center">
+                  You need to
+                  <router-link style="text-decoration:none" class="primary--text" to="/signin">login</router-link>&nbsp;to comment
+                </v-sheet>
               </v-sheet>
             </v-card>
           </v-col>
@@ -161,6 +160,10 @@ export default class Blog extends Vue {
 
   get user() {
     return store.getters.user;
+  }
+
+  get activeUserUid() {
+    return store.getters.activeUserUid;
   }
 
   get commentsNum() {
