@@ -13,7 +13,7 @@
     "direct-vuex": "^0.10.2",
     "firebase": "^7.5.2",
     "idb": "^4.0.5",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "node-sass": "^4.13.0",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
